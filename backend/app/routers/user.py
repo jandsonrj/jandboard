@@ -39,6 +39,13 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+@router.put("/users/{user_id}/deactivate", response_model=schemas.User)
+def deactivate_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.deactivate_user(db, user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
 
 @router.get("/me", response_model=schemas.User)
 def read_users_me(current_user: schemas.User = Depends(get_current_user)):

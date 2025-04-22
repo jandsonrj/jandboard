@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
+from datetime import datetime, timezone
 from app.database import Base
-
 
 class User(Base):
     __tablename__ = "users"
@@ -9,8 +9,10 @@ class User(Base):
     name = Column(String, index=True)
     email = Column(String, unique=True, index=True)
     password_hash = Column(String)
-    tasks = relationship("Task", back_populates="owner")
+    is_active = Column(Boolean, default=True)
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
+    tasks = relationship("Task", back_populates="owner")
 
 class Task(Base):
     __tablename__ = "tasks"

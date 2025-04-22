@@ -8,8 +8,12 @@ router = APIRouter()
 
 @router.post("/register", response_model=schemas.User)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.create_user(db, user)
-    return db_user
+    try:
+        db_user = crud.create_user(db, user)
+        return db_user
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 @router.post("/login")
 def login(user: schemas.UserLogin, db: Session = Depends(get_db)):

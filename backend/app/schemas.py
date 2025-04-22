@@ -1,4 +1,6 @@
 from pydantic import BaseModel, EmailStr
+from datetime import datetime
+
 
 
 class TaskBase(BaseModel):
@@ -37,9 +39,12 @@ class UserLogin(BaseModel):
 
 
 
-class User(UserBase):
+class User(BaseModel):
     id: int
-    tasks: list[Task] = []
-
+    name: str
+    email: str
+    is_active: bool
+    updated_at: datetime
     class Config:
-        orm_mode = True
+        from_attributes = True
+
